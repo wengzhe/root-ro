@@ -25,35 +25,27 @@ if [ -e "/boot/cmdline.bak" ] && [ -e "/etc/initramfs-tools/scripts/init-bottom/
     fi
 fi
 
-#checking initramfs
-num=`find /boot -name 'init*' | wc -l`
-echo "Checking initramfs"
-if [ $num -lt 1 ]; then
-	echo "Initramfs missing, building..."
-	mkinitramfs -o /boot/init.gz
-	if [ `cat /boot/config.txt | grep 'initramfs' | wc -l` -lt 1 ]; then
-		echo "initramfs init.gz" >> /boot/config.txt
-	fi
-	echo "Reboot to make sure initramfs work well please"
-	exit 0
-fi
-echo "Initramfs good"
-
 echo "Installing script \"root-ro\""
 
 cp root-ro /etc/initramfs-tools/scripts/init-bottom/root-ro
 chmod 0755 /etc/initramfs-tools/scripts/init-bottom/root-ro
 
 #add overlay to /etc/initramfs-tools/modules
-if [ `cat /etc/initramfs-tools/modules | grep 'overlay' | wc -l` -lt 1 ]; then
-	echo "overlay" >> /etc/initramfs-tools/modules
-fi
+#if [ `cat /etc/initramfs-tools/modules | grep 'overlay' | wc -l` -lt 1 ]; then
+#	echo "overlay" >> /etc/initramfs-tools/modules
+#fi
 
 #now we need to make sure there is an initramfs exist
 echo "Updating initramfs"
-mkinitramfs -o /boot/init.gz
+if [ `cat /boot/config.txt | grep 'initramfs' | wc -l` -lt 1 ]; then
+	cp /boot/config.txt /boot/config.bak
+	update-initramfs -c -k `uname -r` -v
+	echo "initramfs initrd.img-`uname -r`" >> /boot/config.txt
+else
+	update-initramfs -u
+fi
 
-echo "Ccript is installed, changing /boot/cmdline.txt"
+echo "Script is installed, changing /boot/cmdline.txt"
 
 echo "Backing up /boot/cmdline.txt to /boot/cmdline.bak"
 cp /boot/cmdline.txt /boot/cmdline.bak

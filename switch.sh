@@ -26,6 +26,7 @@ if [[ -z "$config" ]]; then
 	read A
 	if [[ $A == Y* ]] || [[ $A == y* ]]; then
 		echo "disable-root-ro=true $str" > $filename
+		echo "Done! Reboot please"
 	else
 		echo "Nothing changed"
 	fi
@@ -35,6 +36,7 @@ else
 	read A
 	if [[ $A == Y* ]] || [[ $A == y* ]]; then
 		echo ${str/" $config "/" "} > $filename
+		echo "Done! Reboot please"
 	else
 		echo "Nothing changed"
 	fi
