@@ -11,14 +11,9 @@ if [ -e "/boot/cmdline.bak" ]; then
 	mv /boot/cmdline.bak /boot/cmdline.txt
 fi
 
-if [ -e "/boot/config.bak" ]; then                    #remove initramfs
-	echo "config.bak found, recovering"
-	mv /boot/config.bak /boot/config.txt
-else
-	if [ -e "/etc/initramfs-tools/scripts/init-bottom/root-ro" ]; then
-		rm /etc/initramfs-tools/scripts/init-bottom/root-ro
-		update-initramfs -u
-	fi
+if [ -e "/etc/initramfs-tools/scripts/init-bottom/root-ro" ]; then
+	rm /etc/initramfs-tools/scripts/init-bottom/root-ro
+	update-initramfs -u
 fi
 
 echo "Done! Please reboot and run uninstall_step2.sh"
