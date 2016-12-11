@@ -3,6 +3,11 @@
 echo "Read-only Root-FS script got from niun/root-ro @ gist of github"
 echo "Installation script by WZ"
 
+CUR_DIR=$(cd "$(dirname "${BASH_SOURCE-$0}")"; pwd)
+echo $CUR_DIR
+
+cd "$(dirname "${BASH_SOURCE-$0}")"
+
 if [ `dpkg -l | grep "busybox" | wc -l` -lt 1 ]; then
     echo "Info: You need busybox first"
     echo "e.g. \"sudo apt-get install busybox\""
