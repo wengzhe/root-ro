@@ -27,6 +27,11 @@ if [ -e "/etc/initramfs-tools/scripts/init-bottom/root-ro" ]; then
 	rm /etc/initramfs-tools/scripts/init-bottom/root-ro
 fi
 
+if [ `cat /etc/initramfs-tools/modules | grep 'overlay' | wc -l` -ge 1 ]; then
+	awk '$1 != "overlay" {print $0}' < /etc/initramfs-tools/modules > /etc/initramfs-tools/modules.tmp
+	mv /etc/initramfs-tools/modules.tmp /etc/initramfs-tools/modules
+fi
+
 if [ -e "/boot/config.bak" ]; then
 	echo "config.bak found, recovering"
 	mv /boot/config.bak /boot/config.txt
