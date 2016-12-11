@@ -35,7 +35,7 @@ else
 	echo -e "Enable it?(Y/N)\c"
 	read A
 	if [[ $A == Y* ]] || [[ $A == y* ]]; then
-		echo ${str/" $config "/" "} > $filename
+		echo ${str/"$config "/} > $filename
 		echo "Done! Reboot please"
 	else
 		echo "Nothing changed"
