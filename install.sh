@@ -32,7 +32,8 @@ cd "$(dirname "${BASH_SOURCE-$0}")"
 cp root-ro /etc/initramfs-tools/scripts/init-bottom/root-ro
 chmod 0755 /etc/initramfs-tools/scripts/init-bottom/root-ro
 
-add overlay to /etc/initramfs-tools/modules
+#add overlay to /etc/initramfs-tools/modules
+echo "Modifying /etc/initramfs-tools/modules"
 if [ `cat /etc/initramfs-tools/modules | grep 'overlay' | wc -l` -lt 1 ]; then
 	echo "overlay" >> /etc/initramfs-tools/modules
 fi
