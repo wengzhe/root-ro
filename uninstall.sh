@@ -6,20 +6,32 @@ if [ $UID -ne 0 ]; then
 	exit 1
 fi
 
+if [ `mount | awk '$3 == "/" {print $1}'` = "overlay" ]; then
+	echo "Info: Found system in RO mode! disabling..."
+	filename="/boot/cmdline.txt"
+	str=`cat $filename`
+	echo "disable-root-ro=true $str" > $filename
+	echo "Done! Please reboot and rerun this script"
+fi
+
+echo "Info: System in RW mode now! Preparing to uninstall..."
+
 if [ -e "/boot/cmdline.bak" ]; then
 	echo "cmdline.bak found, recovering"
 	mv /boot/cmdline.bak /boot/cmdline.txt
 fi
 
 if [ -e "/etc/initramfs-tools/scripts/init-bottom/root-ro" ]; then
+	echo "root-ro found, removing"
 	rm /etc/initramfs-tools/scripts/init-bottom/root-ro
+fi
+
+if [ -e "/boot/config.bak" ]; then
+	echo "config.bak found, recovering"
+	mv /boot/config.bak /boot/config.txt
+	update-initramfs -d -k `uname -r`
+else
 	update-initramfs -u
 fi
 
-if [ `mount | awk '$3 == "/" {print $1}'` = "overlay" ]; then
-	echo "Done! Please reboot and run uninstall_step2.sh"
-else
-	echo "No Need to reboot now, calling uninstall_step2.sh"
-	./uninstall_step2.sh
-	echo "Done! Please reboot"
-fi
+echo "Done! Please reboot"
