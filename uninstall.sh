@@ -16,4 +16,10 @@ if [ -e "/etc/initramfs-tools/scripts/init-bottom/root-ro" ]; then
 	update-initramfs -u
 fi
 
-echo "Done! Please reboot and run uninstall_step2.sh"
+if [ `mount | awk '$3 == "/" {print $1}'` = "overlay" ]; then
+	echo "Done! Please reboot and run uninstall_step2.sh"
+else
+	echo "No Need to reboot now, calling uninstall_step2.sh"
+	./uninstall_step2.sh
+	echo "Done! Please reboot"
+fi
