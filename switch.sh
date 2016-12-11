@@ -21,31 +21,21 @@ do
 done
 
 if [[ -z "$config" ]]; then
-	echo -e "No configuration of disable-root-ro found!\nPlease install the Read-only Root-FS script first"
-	exit 1
-fi
-
-echo -e "\nTrying to analyse..."
-if [[ $config == *false ]]; then
-	echo "Root-ro is enabled currently"
-	set="disable-root-ro=true"
-elif [[ $config == *true ]]; then
-	echo "Root-ro is disabled currently"
-	set="disable-root-ro=false"
+	echo -e "Root-ro is enabled now!"
+	echo -e "Disable it?(Y/N)\c"
+	read A
+	if [[ $A == Y* ]] || [[ $A == y* ]]; then
+		echo "disable-root-ro=true $str" > $filename
+	else
+		echo "Nothing changed"
+	fi
 else
-	echo "failed: not true or false"
-	set="disable-root-ro=false"
-fi
-
-echo -e "\nChange \"$config\" into \"$set\"?(Y/N)\c"
-
-read A
-
-if [[ $A == Y* ]] || [[ $A == y* ]]; then
-	echo ${str/$config/$set} > $filename
-	echo -e "Root-ro \c"
-	([[ $set == *true ]] && echo "disabled!") || ([[ $set == *false ]] && echo "enabled!")
-	echo "done! please reboot"
-else
-	echo "Nothing changed"
+	echo -e "Root-ro is disabled now!"
+	echo -e "Enable it?(Y/N)\c"
+	read A
+	if [[ $A == Y* ]] || [[ $A == y* ]]; then
+		echo ${str/" $config "/" "} > $filename
+	else
+		echo "Nothing changed"
+	fi
 fi

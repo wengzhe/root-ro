@@ -29,7 +29,7 @@ fi
 num=`find /boot -name 'init*' | wc -l`
 echo "Checking initramfs"
 if [ $num -lt 1 ]; then
-	echo "Initramfs missing"
+	echo "Initramfs missing, building..."
 	mkinitramfs -o /boot/init.gz
 	if [ `cat /boot/config.txt | grep 'initramfs' | wc -l` -lt 1 ]; then
 		echo "initramfs init.gz" >> /boot/config.txt
@@ -58,9 +58,9 @@ echo "Ccript is installed, changing /boot/cmdline.txt"
 echo "Backing up /boot/cmdline.txt to /boot/cmdline.bak"
 cp /boot/cmdline.txt /boot/cmdline.bak
 
-echo "Adding root-ro-driver=overlay disable-root-ro=false to /boot/cmdline.txt"
+echo "Adding root-ro-driver=overlay to /boot/cmdline.txt"
 bak=`cat /boot/cmdline.txt`
-echo -e "root-ro-driver=overlay disable-root-ro=false \c" > /boot/cmdline.txt
+echo -e "root-ro-driver=overlay \c" > /boot/cmdline.txt
 echo $bak >> /boot/cmdline.txt
 
 #or we can use cmdline(string) in config.txt of Raspberry Pi instead of cmdline.txt
