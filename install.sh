@@ -1,12 +1,8 @@
 #!/bin/bash
 
 echo "Read-only Root-FS script got from niun/root-ro @ gist of github"
+echo "Enable initramfs on Raspberry PI @ github.com/chesty/overlayroot"
 echo "Installation script by WZ"
-
-CUR_DIR=$(cd "$(dirname "${BASH_SOURCE-$0}")"; pwd)
-echo $CUR_DIR
-
-cd "$(dirname "${BASH_SOURCE-$0}")"
 
 if [ `dpkg -l | grep "busybox" | wc -l` -lt 1 ]; then
     echo "Info: You need busybox first"
@@ -32,6 +28,7 @@ fi
 
 echo "Installing script \"root-ro\""
 
+cd "$(dirname "${BASH_SOURCE-$0}")"
 cp root-ro /etc/initramfs-tools/scripts/init-bottom/root-ro
 chmod 0755 /etc/initramfs-tools/scripts/init-bottom/root-ro
 

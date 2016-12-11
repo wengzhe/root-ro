@@ -11,7 +11,7 @@ if [ `mount | awk '$3 == "/" {print $1}'` = "overlay" ]; then
 	filename="/boot/cmdline.txt"
 	str=`cat $filename`
 	echo "disable-root-ro=true $str" > $filename
-	echo "Done! Please reboot and rerun this script"
+	echo "Disabled! Please reboot and re-run this script"
 	exit 0
 fi
 
