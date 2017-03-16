@@ -35,7 +35,7 @@ if [ -e "/boot/cmdline.bak" ]; then
 		str=${str/"$config2 "/}
 	fi
 	echo $str > /boot/cmdline.bak
-	#mv /boot/cmdline.bak /boot/cmdline.txt
+	mv /boot/cmdline.bak /boot/cmdline.txt
 fi
 
 if [ -e "/etc/initramfs-tools/scripts/init-bottom/root-ro" ]; then
@@ -51,7 +51,7 @@ fi
 if [ -e "/boot/config.bak" ]; then
 	echo "config.bak found, recovering"
 	awk '$1 != "initramfs" {print $0}' < /boot/config.txt > /boot/config.bak
-	#mv /boot/config.bak /boot/config.txt
+	mv /boot/config.bak /boot/config.txt
 	update-initramfs -d -k `uname -r`
 else
 	update-initramfs -u
