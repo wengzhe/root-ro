@@ -19,7 +19,23 @@ echo "Info: System in RW mode now! Preparing to uninstall..."
 
 if [ -e "/boot/cmdline.bak" ]; then
 	echo "cmdline.bak found, recovering"
-	mv /boot/cmdline.bak /boot/cmdline.txt
+	filename="/boot/cmdline.txt"
+	str=`cat $filename`
+	strlist=($str)
+	i=${#strlist[@]}
+	for ((j = 0; j < $i; j++))
+	do
+		[[ ${strlist[$j]} == disable-root-ro* ]] && config=${strlist[$j]}
+		[[ ${strlist[$j]} == root-ro-driver* ]] && config2=${strlist[$j]}
+	done
+	if [[ ! -z "$config" ]]; then
+		str=${str/"$config "/}
+	fi
+	if [[ ! -z "$config2" ]]; then
+		str=${str/"$config2 "/}
+	fi
+	echo $str > /boot/cmdline.bak
+	#mv /boot/cmdline.bak /boot/cmdline.txt
 fi
 
 if [ -e "/etc/initramfs-tools/scripts/init-bottom/root-ro" ]; then
@@ -34,7 +50,8 @@ fi
 
 if [ -e "/boot/config.bak" ]; then
 	echo "config.bak found, recovering"
-	mv /boot/config.bak /boot/config.txt
+	awk '$1 != "initramfs" {print $0}' < /boot/config.txt > /boot/config.bak
+	#mv /boot/config.bak /boot/config.txt
 	update-initramfs -d -k `uname -r`
 else
 	update-initramfs -u
