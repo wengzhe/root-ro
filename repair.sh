@@ -17,14 +17,13 @@ if [ `mount | awk '$3 == "/" {print $1}'` = "overlay" ]; then
 	exit 0
 fi
 
-echo "Installing script \"root-ro\""
-
+echo "Checking script \"root-ro\""
 cd "$(dirname "${BASH_SOURCE-$0}")"
 cp root-ro /etc/initramfs-tools/scripts/init-bottom/root-ro
 chmod 0755 /etc/initramfs-tools/scripts/init-bottom/root-ro
 
 #add overlay to /etc/initramfs-tools/modules
-echo "Modifying /etc/initramfs-tools/modules"
+echo "Checking /etc/initramfs-tools/modules"
 if [ `cat /etc/initramfs-tools/modules | grep 'overlay' | wc -l` -lt 1 ]; then
 	echo "overlay" >> /etc/initramfs-tools/modules
 fi
@@ -32,16 +31,25 @@ fi
 #now we need to make sure there is an initramfs exist
 echo "Updating initramfs"
 if [ `cat /boot/config.txt | grep 'initramfs' | wc -l` -lt 1 ]; then
+	echo "No initramfs, making..."
 	cp /boot/config.txt /boot/config.bak
 	update-initramfs -c -k `uname -r` -v
 	echo "initramfs initrd.img-`uname -r`" >> /boot/config.txt
 else
 	#check the kernel version
+	echo "Initramfs exists, checking kernel version..."
 	line=`cat /boot/config.txt | grep 'initramfs'`
 	K_V=${line#*-}
-	if [ "${var#*-}" == "`uname -r`" ]; then
-		update-initramfs -u
+	if [ "$K_V" == "`uname -r`" ]; then
+		echo -e "Kernel version right, update initramfs?(Y/N)\c"
+		read A
+		if [[ $A == Y* ]] || [[ $A == y* ]]; then
+			update-initramfs -u
+		else
+			echo "Not changed."
+		fi
 	else
+		echo "Kernel version wrong, remaking..."
 		cd /boot
 		for k in `ls initrd.img-*`
 		do
@@ -55,7 +63,7 @@ else
 	fi
 fi
 
-echo "Script is installed, changing /boot/cmdline.txt"
+echo "Checking /boot/cmdline.txt"
 
 if [ `cat /boot/cmdline.txt | grep 'root-ro' | wc -l` -lt 1 ]; then
 	if [ -ne "/boot/cmdline.bak" ]; then
