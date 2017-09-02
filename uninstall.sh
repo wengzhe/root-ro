@@ -27,12 +27,16 @@ if [ -e "/boot/cmdline.bak" ]; then
 	do
 		[[ ${strlist[$j]} == disable-root-ro* ]] && config=${strlist[$j]}
 		[[ ${strlist[$j]} == root-ro-driver* ]] && config2=${strlist[$j]}
+		[[ ${strlist[$j]} == run-level* ]] && config3=${strlist[$j]}
 	done
 	if [[ ! -z "$config" ]]; then
 		str=${str/"$config "/}
 	fi
 	if [[ ! -z "$config2" ]]; then
 		str=${str/"$config2 "/}
+	fi
+	if [[ ! -z "$config3" ]]; then
+		str=${str/"$config3 "/}
 	fi
 	echo $str > /boot/cmdline.bak
 	mv /boot/cmdline.bak /boot/cmdline.txt
