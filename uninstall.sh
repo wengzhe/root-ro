@@ -53,6 +53,8 @@ if [ -e "/etc/runlevel.sh" ]; then
 	rm /etc/runlevel.sh
 fi
 
+(crontab -l 2>/dev/null | grep -Fv /etc/runlevel.sh) | crontab - 
+
 if [ -e "/boot/config.bak" ]; then
 	echo "config.bak found, recovering"
 	awk '$1 != "initramfs" {print $0}' < /boot/config.txt > /boot/config.bak

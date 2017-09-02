@@ -32,8 +32,18 @@ cd "$(dirname "${BASH_SOURCE-$0}")"
 cp root-ro /etc/initramfs-tools/scripts/init-bottom/root-ro
 chmod 0755 /etc/initramfs-tools/scripts/init-bottom/root-ro
 
+echo "Installing \"runlevel.sh\""
 cp runlevel.sh /etc/runlevel.sh
 chmod 0755 /etc/runlevel.sh
+
+echo "Adding \"runlevel.sh\" to crontab"
+PROGRAM=/etc/runlevel.sh
+CRONTAB_CMD="@reboot $PROGRAM"
+(crontab -l 2>/dev/null | grep -Fv $PROGRAM; echo "$CRONTAB_CMD") | crontab - 
+COUNT=`crontab -l | grep $PROGRAM | grep -v "grep"|wc -l ` 
+if [ $COUNT -lt 1 ]; then 
+	echo "Fail to add crontab $PROGRAM"
+fi
 
 #add overlay to /etc/initramfs-tools/modules
 echo "Modifying /etc/initramfs-tools/modules"
