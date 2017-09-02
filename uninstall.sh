@@ -48,6 +48,11 @@ if [ `cat /etc/initramfs-tools/modules | grep 'overlay' | wc -l` -ge 1 ]; then
 	mv /etc/initramfs-tools/modules.tmp /etc/initramfs-tools/modules
 fi
 
+if [ -e "/etc/runlevel.sh" ]; then
+	echo "runlevel.sh found, removing"
+	rm /etc/runlevel.sh
+fi
+
 if [ -e "/boot/config.bak" ]; then
 	echo "config.bak found, recovering"
 	awk '$1 != "initramfs" {print $0}' < /boot/config.txt > /boot/config.bak
