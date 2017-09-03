@@ -1,3 +1,11 @@
+#使用说明
+- 主要代码为niun/root-ro @ gist.github.com
+- 主要功能为让树莓派工作在只读模式下
+- 使用install.sh/uninstall.sh进行安装卸载
+- 使用switch.sh切换只读/读写模式
+- 使用repair.sh在内核版本发生变化时进行修复
+
+#历史版本（没有TAG，如果需要，根据日期查找吧）
 ## V2.0 @ 2017.9.2
 
 - 增加runlevel脚本，可以在cmdline.txt中加入run-level=X，在系统启动后自动切换到X等级，在切换后会启动ssh服务以防无法连接
