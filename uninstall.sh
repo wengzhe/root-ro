@@ -63,6 +63,7 @@ if [ -e "/boot/config.bak" ]; then
 	echo "config.bak found, recovering"
 	awk '$1 != "initramfs" {print $0}' < /boot/config.txt > /boot/config.bak
 	mv /boot/config.bak /boot/config.txt
+	# sed -i '/^initramfs/d' /boot/config.txt
 	update-initramfs -d -k `uname -r`
 else
 	update-initramfs -u
